@@ -1,6 +1,7 @@
 #pragma once
 #include "stageonefactory.h"
 #include "stagetwofactory.h"
+#include "stagethreefactory.h"
 #include "game.h"
 
 class GameBuilder {

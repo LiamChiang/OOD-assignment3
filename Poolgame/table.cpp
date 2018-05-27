@@ -38,3 +38,33 @@ bool StageTwoTable::sinks(Ball *b) {
     }
     return false;
 }
+
+void StageThreeTable::render(QPainter &painter, const QVector2D& offset) {
+    // our table colour
+    painter.setBrush(m_brush);
+    // draw table
+    painter.drawRect(offset.x(), offset.y(), this->getWidth(), this->getHeight());
+
+    // render the pockets relative to this table
+    for (Pocket* p : m_pockets) {
+        p->render(painter, offset);
+    }
+}
+
+StageThreeTable::~StageThreeTable() {
+    for (Pocket* p : m_pockets) delete p;
+}
+
+bool StageThreeTable::sinks(Ball *b) {
+    QVector2D absPos = b->getPosition();
+    double radius = b->getRadius();
+    // check whether any pockets consumes this ball
+    for (Pocket* p : m_pockets) {
+        // you sunk my scrabbleship
+        if (p->contains(absPos, radius)) {
+            p->incrementSunk();
+            return true;
+        }
+    }
+    return false;
+}

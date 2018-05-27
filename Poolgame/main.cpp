@@ -8,6 +8,7 @@
 #include "utils.h"
 #include "gamebuilder.h"
 #include "stagetwobuilder.h"
+#include "stagethreebuilder.h"
 #include <QApplication>
 #include <QFile>
 #include <iostream>
@@ -42,6 +43,7 @@ int main(int argc, char *argv[])
     }
     else if(conf.value("stage3").toBool(false) == true){
         qDebug() << "call stage3";
+        director.setBuilder(new StageThreeBuilder());
     }
     else {
         // set and transfer ownership of this builder to the director
