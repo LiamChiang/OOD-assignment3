@@ -1,6 +1,7 @@
 #include "game.h"
 #include "utils.h"
 
+#include <QDebug>
 #include <QJsonArray>
 #include <stdexcept>
 #include <cmath>
