@@ -23,7 +23,9 @@ public:
     virtual void setVelocity(QVector2D v) override { m_subBall->setVelocity(v); }
     virtual void changeVelocity(const QVector2D& delta) override { m_subBall->changeVelocity(delta); }
     virtual void multiplyVelocity(const QVector2D& vel) override { m_subBall->multiplyVelocity(vel); }
+    virtual Ball* copyBall() {m_subBall->copyBall();}
 
+    virtual double getStrength() const {return m_subBall->getStrength();}
     virtual double getMass() const override { return m_subBall->getMass(); }
     virtual double getRadius() const override { return m_subBall->getRadius(); }
     virtual QVector2D getPosition() const override { return m_subBall->getPosition(); }

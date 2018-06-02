@@ -20,6 +20,11 @@ void Game::render(QPainter &painter) const {
     m_table->render(painter, m_screenshake);
     // then render all the balls
     for (Ball* b : *m_balls) b->render(painter, m_screenshake);
+//    for(Ball* b: *m_balls){
+////        Ball* test = b->copyBall();
+//        qDebug() << b->copyBall();
+//    }
+//    qDebug() << "-----------------";
 }
 
 void Game::animate(double dt) {
@@ -99,7 +104,11 @@ void Game::animate(double dt) {
         // delete all balls marked with nullptr
         m_balls->erase(std::find(m_balls->begin(), m_balls->end(), nullptr));
     }
-    for (Ball* b: toBeAdded) m_balls->push_back(b);
+    for (Ball* b: toBeAdded) m_balls->push_back(b);    
+//    originator.restoreFromMemento(caretaker.getState(0));
+//    for(int i = 0; i < originator.getBallState()->size(); ++i){
+//        qDebug()<<"config--> " << originator.getBallState()[0][i]->getPosition();
+//    }
 
     updateShake(dt);
 }

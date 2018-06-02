@@ -38,9 +38,10 @@ SOURCES += \
     stagethreebuilder.cpp \
     stagethreefactory.cpp \
     pocketdecorator.cpp \
-    gamecaller.cpp \
-    gamelistmaker.cpp \
-    gamemomento.cpp
+    gamememento.cpp \
+    gameoriginator.cpp \
+    gamestatecaretaker.cpp \
+    gamestate.cpp
 
 HEADERS += \
         dialog.h \
@@ -59,9 +60,10 @@ HEADERS += \
     stagethreebuilder.h \
     stagethreefactory.h \
     pocketdecorator.h \
-    gamecaller.h \
-    gamelistmaker.h \
-    gamemomento.h
+    gamememento.h \
+    gameoriginator.h \
+    gamestatecaretaker.h \
+    gamestate.h
 
 FORMS += \
         dialog.ui
