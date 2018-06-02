@@ -13,8 +13,9 @@ public:
     void add(GameMemento* state){
         mementoList.push_back(state);
     }
+    std::vector<GameMemento*> getMementoList(){return mementoList;}
+
     GameMemento* getState(int index){
-//        qDebug() << mementoList[index];
         return mementoList[index];
     }
 };

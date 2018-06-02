@@ -12,7 +12,8 @@ void CueBall::render(QPainter &painter, const QVector2D &offset) {
 
 Ball* CueBall::copyBall() {
     CueBall* cb = new CueBall(m_subBall->copyBall());
-    return static_cast<Ball*>(cb);
+//    cb->getEvents();
+    return cb;
 }
 
 void CueBall::mouseClickEvent(QMouseEvent* e) {

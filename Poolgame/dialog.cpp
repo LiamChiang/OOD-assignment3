@@ -60,6 +60,12 @@ void Dialog::mouseMoveEvent(QMouseEvent* event) {
     evalAllEventsOfTypeSpecified(MouseEventable::EVENTS::MouseMoveFn, event);
 }
 
+void Dialog::keyPressEvent(QKeyEvent* event){
+    if(Qt::Key_R == event->key()){
+        m_game->undo();
+    }
+}
+
 void Dialog::evalAllEventsOfTypeSpecified(MouseEventable::EVENTS t, QMouseEvent *event) {
     // handle all the clicky events, and remove them if they've xPIRED
     MouseEventable::EventQueue& Qu = m_game->getEventFns();

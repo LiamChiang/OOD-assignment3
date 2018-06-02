@@ -99,15 +99,15 @@ void Game::animate(double dt) {
         // delete all balls marked with nullptr
         m_balls->erase(std::find(m_balls->begin(), m_balls->end(), nullptr));
     }
-    for (Ball* b: toBeAdded) m_balls->push_back(b);    
+    for (Ball* b: toBeAdded) m_balls->push_back(b);
 
-    originator.set(m_balls);
-    caretaker.add(originator.saveToMemento());
-    originator.restoreFromMemento(caretaker.getState(1));
-    for(int i = 0; i < originator.getBallState()->size(); ++i){
-        qDebug()<<"config--> " << originator.getBallState()[0][i]->getPosition();
+//    qDebug() << m_balls[0][0]->getVelocity();
+
+    //save the ball state when the cue ball is not moving
+    if(m_balls[0][0]->getVelocity().x() < 0.01 && m_balls[0][0]->getVelocity().y() < 0.01 && m_balls[0][0]->getVelocity().x() > 0.001 && m_balls[0][0]->getVelocity().y() > 0.001){
+        originator.set(m_balls);
+        caretaker.add(originator.saveToMemento());
     }
-
     updateShake(dt);
 }
 
@@ -189,4 +189,36 @@ std::pair<QVector2D, QVector2D> Game::resolveCollision(Ball* ballA, Ball* ballB)
 
     // return the change in velocities for the two balls
     return std::make_pair(ballA->getVelocity() - ballAStartingVelocity, ballB->getVelocity() - ballBStartingVelocity);
+}
+
+void Game::undo(){
+    if(m_balls[0][0]->getVelocity().x() < 0.01 && m_balls[0][0]->getVelocity().y() < 0.01){
+        int flag = 0;
+        int index = 0;
+        qDebug() << index;
+        for(int i = caretaker.getMementoList().size() - 1; i >= 0; --i){
+            originator.restoreFromMemento(caretaker.getState(i));
+            qDebug() << originator.getBallState()[0];
+            if(m_balls[0][0]->getPosition().x() !=  originator.getBallState()[0][0]->getPosition().x() &&
+                    m_balls[0][0]->getVelocity().y() != originator.getBallState()[0][0]->getPosition().x()
+                    && flag == 0){
+                qDebug() << "in";
+                qDebug() << i;
+                index = i;
+                flag = 1;
+            }
+        }
+        if(flag == 1){
+            originator.restoreFromMemento(caretaker.getState(index));
+            qDebug() << originator.getBallState();
+        }
+//        originator.restoreFromMemento(caretaker.getState(0));
+//        m_balls = originator.getBallState();
+//        originator.set(m_balls);
+//        caretaker.add(originator.saveToMemento());
+    }
+    else{
+        originator.restoreFromMemento(caretaker.getState(0));
+        qDebug() << originator.getBallState();
+    }
 }

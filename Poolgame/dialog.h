@@ -36,8 +36,8 @@ public slots:
     void mouseReleaseEvent(QMouseEvent* event);
     // qt mouse move
     void mouseMoveEvent(QMouseEvent* event);
-
-//    void keypressevent(QKeyEvent* event);
+    // qt keypress
+    void keyPressEvent(QKeyEvent* event);
 
 private:
     /**
