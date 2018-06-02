@@ -8,6 +8,10 @@ void StageOneBall::render(QPainter &painter, const QVector2D& offset) {
     painter.drawEllipse((offset + m_pos).toPointF(), m_radius, m_radius);
 }
 
+Ball* StageOneBall::copyBall(){
+    return new StageOneBall(m_brush.color(),QVector2D(m_pos),QVector2D(m_velocity),m_mass,m_radius);
+}
+
 void CompositeBall::render(QPainter &painter, const QVector2D& offset) {
     recursiveRender(painter, offset);
 }
@@ -45,3 +49,15 @@ bool CompositeBall::applyBreak(const QVector2D &deltaV, std::vector<Ball *> &par
     }
     return false;
 }
+
+Ball* CompositeBall::copyBall() {
+    CompositeBall *copy = new CompositeBall(m_brush.color(),QVector2D(m_pos),QVector2D(m_velocity),m_mass,m_radius,m_strength);
+    for(Ball* clone_child: m_children){
+        Ball* copy2 = clone_child->copyBall();
+        copy->addChild(copy2);
+    }
+//    Ball* test= static_cast<Ball*>(copy);
+//    qDebug() << test;
+    return copy;
+}
+

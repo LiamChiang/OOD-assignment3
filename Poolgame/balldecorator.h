@@ -23,7 +23,9 @@ public:
     virtual void setVelocity(QVector2D v) override { m_subBall->setVelocity(v); }
     virtual void changeVelocity(const QVector2D& delta) override { m_subBall->changeVelocity(delta); }
     virtual void multiplyVelocity(const QVector2D& vel) override { m_subBall->multiplyVelocity(vel); }
+    virtual Ball* copyBall() override {return m_subBall->copyBall();}
 
+    virtual double getStrength() const {return m_subBall->getStrength();}
     virtual double getMass() const override { return m_subBall->getMass(); }
     virtual double getRadius() const override { return m_subBall->getRadius(); }
     virtual QVector2D getPosition() const override { return m_subBall->getPosition(); }
@@ -59,7 +61,7 @@ public:
      * @param offset - where our pos is relative to
      */
     void render(QPainter &painter, const QVector2D &offset) override;
-
+    Ball* copyBall() override;
 public:
     /**
      * @brief mouseClickEvent - update where the start of the mouse drag is.
@@ -110,6 +112,7 @@ public:
      * @param offset - the offset that this ball is from the origin
      */
     void render(QPainter &painter, const QVector2D &offset);
+    Ball* copyBall() override;
 };
 
 class BallSmashDecorator : public BallDecorator {
@@ -157,4 +160,6 @@ public:
      * @param offset - the offset from the window that this ball's pos is.
      */
     virtual void render(QPainter &painter, const QVector2D &offset) override;
+
+    Ball* copyBall() override;
 };

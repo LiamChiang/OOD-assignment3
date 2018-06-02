@@ -99,7 +99,14 @@ void Game::animate(double dt) {
         // delete all balls marked with nullptr
         m_balls->erase(std::find(m_balls->begin(), m_balls->end(), nullptr));
     }
-    for (Ball* b: toBeAdded) m_balls->push_back(b);
+    for (Ball* b: toBeAdded) m_balls->push_back(b);    
+
+    originator.set(m_balls);
+    caretaker.add(originator.saveToMemento());
+    originator.restoreFromMemento(caretaker.getState(1));
+    for(int i = 0; i < originator.getBallState()->size(); ++i){
+        qDebug()<<"config--> " << originator.getBallState()[0][i]->getPosition();
+    }
 
     updateShake(dt);
 }

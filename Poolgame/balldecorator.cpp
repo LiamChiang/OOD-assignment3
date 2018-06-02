@@ -10,6 +10,11 @@ void CueBall::render(QPainter &painter, const QVector2D &offset) {
     }
 }
 
+Ball* CueBall::copyBall() {
+    CueBall* cb = new CueBall(m_subBall->copyBall());
+    return static_cast<Ball*>(cb);
+}
+
 void CueBall::mouseClickEvent(QMouseEvent* e) {
 
     QVector2D p = QVector2D(e->pos());
@@ -84,6 +89,10 @@ void BallSparkleDecorator::render(QPainter &painter, const QVector2D &offset) {
     }
 }
 
+Ball* BallSparkleDecorator::copyBall() {
+    return new BallSparkleDecorator(m_subBall->copyBall());
+}
+
 void BallSmashDecorator::addCrumbs(QPointF cPos) {
     size_t numAdding = rand() % 10;
     for (size_t i = 0; i < numAdding; ++i) {
@@ -133,4 +142,8 @@ void BallSmashDecorator::render(QPainter &painter, const QVector2D &offset) {
         // reset to opaque
         painter.setOpacity(1);
     }
+}
+
+Ball* BallSmashDecorator::copyBall() {
+    return new BallSmashDecorator(m_subBall->copyBall());
 }

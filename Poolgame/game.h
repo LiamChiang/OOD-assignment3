@@ -1,19 +1,26 @@
 #pragma once
+#include <QDebug>
 #include <QJsonObject>
 #include <functional>
 #include <QMouseEvent>
+#include <algorithm>
 
 #include "abstractstagefactory.h"
-
+#include "gameoriginator.h"
+#include "gamestatecaretaker.h"
+#include "gamememento.h"
 #include "table.h"
 #include "ball.h"
 #include "balldecorator.h"
 #include "utils.h"
 
+
 class Game {
     std::vector<Ball*>* m_balls;
+    std::vector<Ball*>* config_balls;
     Table* m_table;
-
+    GameOriginator originator;
+    GameStateCareTaker caretaker;
     // screenshake stuff
     QVector2D m_screenshake;
     double m_shakeRadius = 0.0;
@@ -34,7 +41,17 @@ private:
 public:
     ~Game();
     Game(std::vector<Ball*>* balls, Table* table) :
-        m_balls(balls), m_table(table) {}
+        m_balls(balls), m_table(table) {
+        qDebug() << *m_balls;
+        config_balls = new std::vector<Ball*>();
+        for(Ball* b: *m_balls){
+            Ball* clone =  b->copyBall();
+            config_balls->push_back(clone);
+
+        }
+        originator.set(config_balls);
+        caretaker.add(originator.saveToMemento());
+    }
     /**
      * @brief Draws all owned objects to the screen (balls and table)
      * @param painter - qtpainter to blit to screen with
@@ -91,4 +108,5 @@ public:
      * @return event queue of event functions
      */
     MouseEventable::EventQueue& getEventFns() { return m_mouseEventFunctions; }
+    void printValue();
 };

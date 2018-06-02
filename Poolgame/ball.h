@@ -1,5 +1,6 @@
 #pragma once
 
+#include <QDebug>
 #include <QPoint>
 #include <cmath>
 #include <QPainter>
@@ -11,6 +12,7 @@ protected:
     QVector2D m_pos;
     QVector2D m_velocity;
     double m_mass;
+    double m_strength = std::numeric_limits<double>::max();
     int m_radius;
 
     // if movement is slower than this, then we're considered at a stand-still
@@ -47,6 +49,8 @@ public:
      */
     virtual void multiplyVelocity(const QVector2D& vel) { m_velocity *= vel; }
 
+    virtual double getStrength() const {return m_strength;}
+    virtual QColor getColour() const {return m_brush.color();}
     virtual double getMass() const { return m_mass; }
     virtual double getRadius() const { return m_radius; }
     virtual QVector2D getPosition() const { return m_pos; }
@@ -55,6 +59,7 @@ public:
     // whether the ball will break, and handle accordingly
     // for base ball, do nothing. insert into rhs if necessary
     virtual bool applyBreak(const QVector2D&, std::vector<Ball*>&) { return false; }
+    virtual Ball* copyBall() = 0;
 };
 
 class StageOneBall : public Ball {
@@ -67,6 +72,7 @@ public:
      * @param painter - QPainter that is owned by the dialog
      */
     void render(QPainter &painter, const QVector2D& offset) override;
+    virtual Ball* copyBall() override;
 };
 
 class CompositeBall : public Ball {
@@ -86,6 +92,7 @@ public:
      * @param painter - QPainter that is owned by the dialog
      */
     void render(QPainter &painter, const QVector2D& offset) override;
+    virtual Ball* copyBall() override;
 
     /* add a child ball to this composite ball */
     void addChild(Ball* b) { m_children.push_back(b); }
