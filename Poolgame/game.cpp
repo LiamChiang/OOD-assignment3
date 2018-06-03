@@ -1,6 +1,7 @@
 #include "game.h"
 #include "utils.h"
 
+#include <math.h>
 #include <QDebug>
 #include <QJsonArray>
 #include <stdexcept>
@@ -101,13 +102,19 @@ void Game::animate(double dt) {
     }
     for (Ball* b: toBeAdded) m_balls->push_back(b);
 
-//    qDebug() << m_balls[0][0]->getVelocity();
-
     //save the ball state when the cue ball is not moving
-    if(m_balls[0][0]->getVelocity().x() < 0.01 && m_balls[0][0]->getVelocity().y() < 0.01 && m_balls[0][0]->getVelocity().x() > 0.001 && m_balls[0][0]->getVelocity().y() > 0.001){
-        originator.set(m_balls);
+    if(fabs(m_balls[0][0]->getVelocity().x()) <= 0.1 && fabs(m_balls[0][0]->getVelocity().y()) <= 0.1
+            && fabs(m_balls[0][0]->getVelocity().x()) >= 0.04 && fabs(m_balls[0][0]->getVelocity().y()) >= 0.04){
+        std::vector<Ball*>* balls_state = new std::vector<Ball*>();
+
+        for (Ball* b: *m_balls){
+            balls_state->push_back(b->copyBall());
+        }
+
+        originator.set(balls_state);
         caretaker.add(originator.saveToMemento());
     }
+
     updateShake(dt);
 }
 
@@ -191,34 +198,43 @@ std::pair<QVector2D, QVector2D> Game::resolveCollision(Ball* ballA, Ball* ballB)
     return std::make_pair(ballA->getVelocity() - ballAStartingVelocity, ballB->getVelocity() - ballBStartingVelocity);
 }
 
-void Game::undo(){
-    if(m_balls[0][0]->getVelocity().x() < 0.01 && m_balls[0][0]->getVelocity().y() < 0.01){
+void Game::undo(Game * game){
+    qDebug() << caretaker.getMementoList().size();
+    if(fabs(m_balls[0][0]->getVelocity().x()) < 0.01 && fabs(m_balls[0][0]->getVelocity().y()) < 0.01){
         int flag = 0;
         int index = 0;
-        qDebug() << index;
-        for(int i = caretaker.getMementoList().size() - 1; i >= 0; --i){
+        for(int i = caretaker.getMementoList().size() - 1; i >= 1; --i){
             originator.restoreFromMemento(caretaker.getState(i));
-            qDebug() << originator.getBallState()[0];
-            if(m_balls[0][0]->getPosition().x() !=  originator.getBallState()[0][0]->getPosition().x() &&
-                    m_balls[0][0]->getVelocity().y() != originator.getBallState()[0][0]->getPosition().x()
+            if(abs(m_balls[0][0]->getPosition().x()) !=  abs(originator.getBallState()[0][0]->getPosition().x()) &&
+                    abs(m_balls[0][0]->getVelocity().y()) != abs(originator.getBallState()[0][0]->getPosition().y())
                     && flag == 0){
-                qDebug() << "in";
-                qDebug() << i;
                 index = i;
                 flag = 1;
             }
+            else{
+                index = 0;
+                flag = 1;
+            }
         }
-        if(flag == 1){
+        if(flag == 1 && index != 0){
             originator.restoreFromMemento(caretaker.getState(index));
-            qDebug() << originator.getBallState();
+            m_balls = originator.getBallState();
+//            caretaker.getMementoList().erase(caretaker.getMementoList().begin()+1,caretaker.getMementoList().end());
         }
-//        originator.restoreFromMemento(caretaker.getState(0));
-//        m_balls = originator.getBallState();
-//        originator.set(m_balls);
-//        caretaker.add(originator.saveToMemento());
+        else if(flag == 1 && index == 0){
+            originator.restoreFromMemento(caretaker.getState(0));
+            m_balls = originator.getBallState();
+//            caretaker.getMementoList().erase(caretaker.getMementoList().begin()+1,caretaker.getMementoList().end());
+        }
     }
     else{
         originator.restoreFromMemento(caretaker.getState(0));
-        qDebug() << originator.getBallState();
+//        m_balls = originator.getBallState();
+        Ball* c = originator.getBallState()->front();
+        CueBall* cb = new CueBall(c);
+        originator.getBallState()->front() = static_cast<Ball*>(cb);
+        m_balls = originator.getBallState();
+//        caretaker.getMementoList().erase(caretaker.getMementoList().begin()+1,caretaker.getMementoList().end());
+        game->addMouseFunctions(cb->getEvents());
     }
 }

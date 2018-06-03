@@ -109,5 +109,5 @@ public:
      */
     MouseEventable::EventQueue& getEventFns() { return m_mouseEventFunctions; }
     void printValue();
-    void undo();
+    void undo(Game* game);
 };

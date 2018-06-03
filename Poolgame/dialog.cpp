@@ -62,7 +62,8 @@ void Dialog::mouseMoveEvent(QMouseEvent* event) {
 
 void Dialog::keyPressEvent(QKeyEvent* event){
     if(Qt::Key_R == event->key()){
-        m_game->undo();
+//        m_game->addMouseFunctions();
+        m_game->undo(m_game);
     }
 }
 
