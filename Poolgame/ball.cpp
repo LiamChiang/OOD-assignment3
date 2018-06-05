@@ -56,8 +56,6 @@ Ball* CompositeBall::copyBall() {
         Ball* copy2 = clone_child->copyBall();
         copy->addChild(copy2);
     }
-//    Ball* test= static_cast<Ball*>(copy);
-//    qDebug() << test;
     return copy;
 }
 

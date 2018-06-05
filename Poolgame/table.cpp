@@ -66,5 +66,11 @@ bool StageThreeTable::sinks(Ball *b) {
             return true;
         }
     }
+    for(int i = 0; i < m_pockets.size(); ++i){
+        if(m_pockets.at(i)->getNumSunk() == 3){
+            delete m_pockets.at(i);
+            m_pockets.erase(m_pockets.begin()+i);
+        }
+    }
     return false;
 }

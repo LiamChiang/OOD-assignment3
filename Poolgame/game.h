@@ -18,6 +18,7 @@
 class Game {
     std::vector<Ball*>* m_balls;
     std::vector<Ball*>* config_balls;
+    std::vector<Pocket*>* m_pockets;
     Table* m_table;
     GameOriginator originator;
     GameStateCareTaker caretaker;
@@ -26,6 +27,9 @@ class Game {
     double m_shakeRadius = 0.0;
     double m_shakeAngle = 0;
     static constexpr double SCREENSHAKEDIST = 10.0;
+    bool sinked = false;
+    bool stage3Trigger = false;
+    bool stage3Pocket = false;
 
     /* increase the amount of screen shake */
     void incrementShake(double amount=SCREENSHAKEDIST) { m_shakeRadius += amount; }
@@ -42,15 +46,15 @@ public:
     ~Game();
     Game(std::vector<Ball*>* balls, Table* table) :
         m_balls(balls), m_table(table) {
-        qDebug() << *m_balls;
+
         config_balls = new std::vector<Ball*>();
         for(Ball* b: *m_balls){
             Ball* clone =  b->copyBall();
             config_balls->push_back(clone);
-
         }
         originator.set(config_balls);
         caretaker.add(originator.saveToMemento());
+
     }
     /**
      * @brief Draws all owned objects to the screen (balls and table)
@@ -108,6 +112,16 @@ public:
      * @return event queue of event functions
      */
     MouseEventable::EventQueue& getEventFns() { return m_mouseEventFunctions; }
-    void printValue();
+    void addBall();
+    void removeBall();
     void undo(Game* game);
+    std::vector<Ball*>* getBalls(){ return m_balls; }
+    std::vector<Pocket*>* getPockets(){return m_pockets;}
+    void saveGameDate(std::vector<Ball*>* ballstates);
+    void triggerStage3(){stage3Trigger = true;}
+    void triggerPocket(){stage3Pocket = true;}
+    void stopPocket(){stage3Pocket = false;}
+    bool isStage3(){return stage3Trigger;}
+    bool isPocketTriggered(){return stage3Pocket;}
+
 };

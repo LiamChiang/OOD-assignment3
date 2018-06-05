@@ -37,20 +37,25 @@ int main(int argc, char *argv[])
 
     // create our game based on our config
     GameDirector director(&conf);
+    Game* game;
     // use builder2 if we're stage two (defaults to false), otherwise no
     if (conf.value("stage2").toBool(false) == true && conf.value("stage3").toBool(false) == false) {
        director.setBuilder(new StageTwoBuilder());
+       game = director.createGame();
     }
     else if(conf.value("stage3").toBool(false) == true){
         qDebug() << "call stage3";
         director.setBuilder(new StageThreeBuilder());
+        game = director.createGame();
+        game->triggerStage3();
     }
     else {
         // set and transfer ownership of this builder to the director
         director.setBuilder(new StageOneBuilder());
+        game = director.createGame();
     }
 
-    Game* game = director.createGame();
+
 
     // display our dialog that contains our game and run
     QApplication a(argc, argv);

@@ -47,6 +47,7 @@ public:
      * @param tableData - json object that contains all properties of the table
      */
     void addTable(QJsonObject& tableData) override;
+
 };
 
 class GameDirector {

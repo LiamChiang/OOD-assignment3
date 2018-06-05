@@ -54,6 +54,7 @@ void Dialog::mousePressEvent(QMouseEvent* event) {
 }
 
 void Dialog::mouseReleaseEvent(QMouseEvent* event) {
+    m_game->saveGameDate(m_game->getBalls());
     evalAllEventsOfTypeSpecified(MouseEventable::EVENTS::MouseRelFn, event);
 }
 void Dialog::mouseMoveEvent(QMouseEvent* event) {
@@ -61,9 +62,27 @@ void Dialog::mouseMoveEvent(QMouseEvent* event) {
 }
 
 void Dialog::keyPressEvent(QKeyEvent* event){
-    if(Qt::Key_R == event->key()){
-//        m_game->addMouseFunctions();
-        m_game->undo(m_game);
+    if(m_game->isStage3()){
+        if(Qt::Key_R == event->key()){
+            m_game->undo(m_game);
+        }
+        if(Qt::Key_Q == event->key()){
+            m_game->addBall();
+        }
+        if(Qt::Key_W == event->key()){
+            m_game->removeBall();
+        }
+        if(Qt::Key_E == event->key()){
+            if(m_game->isPocketTriggered()){
+                m_game->stopPocket();
+            }
+            else{
+                m_game->triggerPocket();
+            }
+        }
+    }
+    if(event->key() == Qt::Key_Escape){
+        close();
     }
 }
 

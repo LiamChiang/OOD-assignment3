@@ -4,18 +4,20 @@
 #include <QPainter>
 #include <QBrush>
 #include <cmath>
+#include <QDebug>
 
 class Pocket
 {
     double m_radius;
     QVector2D m_pos;
+    QVector2D m_horizontal = QVector2D(2.33333,0);
+    QVector2D m_vertical = QVector2D(0,2.33333);
     // default rendering colour for pockets is just black
     QBrush m_pocketBrush = QBrush(QColor("black"));
-
     size_t m_sunk = 0;
 public:
     Pocket(double radius, QVector2D pos) : m_radius(radius), m_pos(pos) {}
-
+    Pocket(){}
     /**
      * @brief render - draw the pocket to the screen with the provided brush and offset
      * @param painter - the brush to paint with
@@ -30,4 +32,13 @@ public:
 
     /** add whether this pocket has sunk a ball */
     void incrementSunk() { ++m_sunk; }
+    Pocket* copyPocket(){return new Pocket(m_radius, m_pos);}
+    size_t getNumSunk(){return m_sunk;}
+    QVector2D getPosition(){return m_pos;}
+    double getRadius(){return m_radius;}
+    QBrush getColourBrush(){return m_pocketBrush;}
+    void changePocketHorizontalDirection(){m_horizontal *= -1;}
+    void changePocketVerticalDirection(){m_vertical *= -1;}
+    void changeHorizontalPosition(){m_pos += m_horizontal;}
+    void changeVerticalPosition(){m_pos += m_vertical;}
 };

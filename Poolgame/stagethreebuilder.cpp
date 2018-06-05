@@ -6,6 +6,8 @@
 #include <cassert>
 #include <functional>
 #include "ball.h"
+#include "table.h"
+#include "pocket.h"
 
 QJsonObject StageThreeBuilder::addDefaultsToBall(QJsonObject bData, const char* defaultColour) {
 
@@ -210,7 +212,7 @@ void StageThreeBuilder::addTable(QJsonObject &tableDatax) {
 
     // make the json supplied compliant (doesn't check pockets)
     QJsonObject cookedTableData = convertToValidTable(tableDatax);
-    StageTwoTable* t = static_cast<StageTwoTable*>(m_factory->makeTable(cookedTableData));
+    StageThreeTable* t = static_cast<StageThreeTable*>(m_factory->makeTable(cookedTableData));
 
     // if we need to make pockets
     if (tableDatax.contains("pockets")) {
@@ -260,6 +262,7 @@ Game* StageThreeBuilder::getResult() {
     ind = rand()%m_buildingBalls->size();
     Ball* bumpBall = m_buildingBalls->at(ind);
     m_buildingBalls->at(ind) = new BallSmashDecorator(bumpBall);
+
 
     Game* retGame = new Game(m_buildingBalls, m_buildingTable);
     // register all the mouse functions for the cueball

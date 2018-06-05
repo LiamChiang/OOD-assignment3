@@ -37,11 +37,7 @@ SOURCES += \
     balldecorator.cpp \
     stagethreebuilder.cpp \
     stagethreefactory.cpp \
-    pocketdecorator.cpp \
-    gamememento.cpp \
-    gameoriginator.cpp \
-    gamestatecaretaker.cpp \
-    gamestate.cpp
+    pocketdecorator.cpp
 
 HEADERS += \
         dialog.h \

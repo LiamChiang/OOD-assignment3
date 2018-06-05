@@ -1,6 +1,7 @@
 #pragma once
 
 #include <QColor>
+#include <QDebug>
 #include <QPainter>
 
 #include "pocket.h"
@@ -13,6 +14,8 @@ protected:
     int m_height;
     QBrush m_brush;
     double m_friction;
+    std::vector<Pocket*> m_pocketList;
+
 public:
     virtual ~Table() {}
     Table(int width, int height, QColor colour, double friction) :
@@ -29,6 +32,7 @@ public:
     double getFriction() const { return m_friction; }
 
     virtual bool sinks(Ball*) { return false; }
+    virtual std::vector<Pocket*> getPockets() = 0;
 };
 
 class StageOneTable : public Table
@@ -41,6 +45,7 @@ public:
      * @param painter - painter to use
      */
     void render(QPainter &painter, const QVector2D& offset) override;
+    std::vector<Pocket*> getPockets() override {return m_pocketList;}
 };
 
 class StageTwoTable : public Table {
@@ -64,6 +69,7 @@ public:
 
     /* self explanatory */
     void addPocket(Pocket* p) { m_pockets.push_back(p); }
+    std::vector<Pocket*> getPockets() override {return m_pocketList;}
 };
 
 class StageThreeTable : public Table {
@@ -87,5 +93,9 @@ public:
 
     /* self explanatory */
     void addPocket(Pocket* p) { m_pockets.push_back(p); }
+    std::vector<Pocket*> getPockets() override {
+        m_pocketList = m_pockets;
+        return m_pocketList;
+    }
 };
 

@@ -53,6 +53,10 @@ void Game::animate(double dt) {
         if (m_table->sinks(ballA)) {
             // defer swallowing until later (messes iterators otherwise)
             toBeRemoved.push_back(ballA);
+            //trigger the sinked flag if cue ball sinks
+            if(ballA->getColour().name() == "#000000"){
+                sinked = true;
+            }
             // nullify this ball
             *it = nullptr;
             continue;
@@ -102,17 +106,26 @@ void Game::animate(double dt) {
     }
     for (Ball* b: toBeAdded) m_balls->push_back(b);
 
-    //save the ball state when the cue ball is not moving
-    if(fabs(m_balls[0][0]->getVelocity().x()) <= 0.1 && fabs(m_balls[0][0]->getVelocity().y()) <= 0.1
-            && fabs(m_balls[0][0]->getVelocity().x()) >= 0.04 && fabs(m_balls[0][0]->getVelocity().y()) >= 0.04){
-        std::vector<Ball*>* balls_state = new std::vector<Ball*>();
-
-        for (Ball* b: *m_balls){
-            balls_state->push_back(b->copyBall());
+    if(stage3Pocket){
+        int randomIndex = rand()%m_table->getPockets().size();
+        if(randomIndex % 2 == 0){
+            m_table->getPockets().at(randomIndex)->changeHorizontalPosition();
+            if(m_table->getWidth() - m_table->getPockets().at(randomIndex)->getRadius() < m_table->getPockets().at(randomIndex)->getPosition().x()){
+                m_table->getPockets().at(randomIndex)->changePocketHorizontalDirection();
+            }
+            else if( -1 * m_table->getPockets().at(randomIndex)->getRadius() > m_table->getPockets().at(randomIndex)->getPosition().x()){
+                m_table->getPockets().at(randomIndex)->changePocketHorizontalDirection();
+            }
         }
-
-        originator.set(balls_state);
-        caretaker.add(originator.saveToMemento());
+        else{
+            m_table->getPockets().at(randomIndex)->changeVerticalPosition();
+            if(m_table->getHeight() - m_table->getPockets().at(randomIndex)->getRadius() < m_table->getPockets().at(randomIndex)->getPosition().y()){
+                m_table->getPockets().at(randomIndex)->changePocketVerticalDirection();
+            }
+            else if( -1 * m_table->getPockets().at(randomIndex)->getRadius() > m_table->getPockets().at(randomIndex)->getPosition().y()){
+                m_table->getPockets().at(randomIndex)->changePocketVerticalDirection();
+            }
+        }
     }
 
     updateShake(dt);
@@ -198,43 +211,61 @@ std::pair<QVector2D, QVector2D> Game::resolveCollision(Ball* ballA, Ball* ballB)
     return std::make_pair(ballA->getVelocity() - ballAStartingVelocity, ballB->getVelocity() - ballBStartingVelocity);
 }
 
+void Game::saveGameDate(std::vector<Ball*>* ballstates){
+    std::vector<Ball*>* balls_state = new std::vector<Ball*>();
+    for (Ball* b: *ballstates){
+        balls_state->push_back(b->copyBall());
+    }
+    originator.set(balls_state);
+    caretaker.add(originator.saveToMemento());
+}
+
+void Game::addBall(){
+    int randomIndex = rand()%m_balls->size();
+    if(randomIndex != 0){
+        Ball * b = m_balls->at(randomIndex)->copyBall();
+        m_balls->push_back(b);
+    }
+}
+
+void Game::removeBall(){
+    int randomIndex = rand()%m_balls->size();
+    if(randomIndex != 0){
+        delete m_balls->at(randomIndex);
+        m_balls->erase(m_balls->begin()+randomIndex);
+    }
+}
+
 void Game::undo(Game * game){
-    qDebug() << caretaker.getMementoList().size();
-    if(fabs(m_balls[0][0]->getVelocity().x()) < 0.01 && fabs(m_balls[0][0]->getVelocity().y()) < 0.01){
-        int flag = 0;
-        int index = 0;
-        for(int i = caretaker.getMementoList().size() - 1; i >= 1; --i){
-            originator.restoreFromMemento(caretaker.getState(i));
-            if(abs(m_balls[0][0]->getPosition().x()) !=  abs(originator.getBallState()[0][0]->getPosition().x()) &&
-                    abs(m_balls[0][0]->getVelocity().y()) != abs(originator.getBallState()[0][0]->getPosition().y())
-                    && flag == 0){
-                index = i;
-                flag = 1;
-            }
-            else{
-                index = 0;
-                flag = 1;
-            }
+    if(m_balls->at(0)->getVelocity().length() < 1 && sinked != true){
+        originator.restoreFromMemento(caretaker.getState(caretaker.getMementoList().size() - 1));
+        m_balls->clear();
+        for(Ball* b: *originator.getBallState()){
+            m_balls->push_back(b->copyBall());
         }
-        if(flag == 1 && index != 0){
-            originator.restoreFromMemento(caretaker.getState(index));
-            m_balls = originator.getBallState();
-//            caretaker.getMementoList().erase(caretaker.getMementoList().begin()+1,caretaker.getMementoList().end());
-        }
-        else if(flag == 1 && index == 0){
-            originator.restoreFromMemento(caretaker.getState(0));
-            m_balls = originator.getBallState();
-//            caretaker.getMementoList().erase(caretaker.getMementoList().begin()+1,caretaker.getMementoList().end());
-        }
+        Ball* c = m_balls->front();
+        CueBall* cb = new CueBall(c);
+        m_balls->front() = static_cast<Ball*>(cb);
+        m_mouseEventFunctions.clear();
+        game->addMouseFunctions(cb->getEvents());
+        caretaker.getMementoList().clear();
+        originator.set(config_balls);
+        caretaker.add(originator.saveToMemento());
     }
     else{
         originator.restoreFromMemento(caretaker.getState(0));
-//        m_balls = originator.getBallState();
-        Ball* c = originator.getBallState()->front();
+        m_balls->clear();
+        for(Ball* b: *originator.getBallState()){
+            m_balls->push_back(b->copyBall());
+        }
+        Ball* c = m_balls->front();
         CueBall* cb = new CueBall(c);
-        originator.getBallState()->front() = static_cast<Ball*>(cb);
-        m_balls = originator.getBallState();
-//        caretaker.getMementoList().erase(caretaker.getMementoList().begin()+1,caretaker.getMementoList().end());
+        m_balls->front() = static_cast<Ball*>(cb);
+        m_mouseEventFunctions.clear();
         game->addMouseFunctions(cb->getEvents());
+        caretaker.getMementoList().clear();
+        originator.set(config_balls);
+        caretaker.add(originator.saveToMemento());
+        sinked = false;
     }
 }
