@@ -23,6 +23,27 @@ void Game::render(QPainter &painter) const {
     for (Ball* b : *m_balls) b->render(painter, m_screenshake);
 }
 
+void imagePopup(){
+    QGraphicsScene* scene = new QGraphicsScene();
+    scene->addItem(new QGraphicsPixmapItem(QPixmap(":/images/Jumpscare.png")));
+    QGraphicsView* view = new QGraphicsView(scene);
+    view->show();
+
+}
+
+void playSoundSink(){
+    QMediaPlayer* sinksound = new QMediaPlayer();
+    sinksound->setMedia(QUrl("qrc:/sounds/death-Roman_K-1190383229.mp3"));
+    sinksound->play();
+}
+
+void playSoundBreak(){
+    QMediaPlayer* bomb = new QMediaPlayer();
+    bomb->setMedia(QUrl("qrc:/sounds/Bomb_Exploding-Sound_Explorer-68256487.wav"));
+    bomb->setVolume(100);
+    bomb->play();
+}
+
 void Game::animate(double dt) {
     // keep track of the removed balls (they're set to nullptr during loop)
     // clean up afterwards
@@ -51,12 +72,18 @@ void Game::animate(double dt) {
 
         // check whether ball should be swallowed
         if (m_table->sinks(ballA)) {
+            //play sound
+            if(isStage3()){
+                playSoundSink();
+                //trigger the sinked flag if cue ball sinks
+                if(ballA->getColour().name() == "#000000"){
+                    imagePopup();
+                    sinked = true;
+                }
+            }
             // defer swallowing until later (messes iterators otherwise)
             toBeRemoved.push_back(ballA);
-            //trigger the sinked flag if cue ball sinks
-            if(ballA->getColour().name() == "#000000"){
-                sinked = true;
-            }
+
             // nullify this ball
             *it = nullptr;
             continue;
@@ -73,6 +100,9 @@ void Game::animate(double dt) {
 
                 // add screenshake, remove ball, and add children to table vector if breaking
                 if (ballA->applyBreak(ballADeltaV, toBeAdded)) {
+                    if(isStage3()){
+                        playSoundBreak();
+                    }
                     toBeRemoved.push_back(ballA);
                     incrementShake();
                     // nullify this ball
@@ -81,6 +111,9 @@ void Game::animate(double dt) {
                 }
                 // add screenshake, remove ball, and add children to table vector if breaking
                 if (ballB->applyBreak(ballBDeltaV, toBeAdded)) {
+                    if(isStage3()){
+                        playSoundBreak();
+                    }
                     toBeRemoved.push_back(ballB);
                     incrementShake();
                     // nullify this ball
@@ -222,8 +255,12 @@ void Game::saveGameDate(std::vector<Ball*>* ballstates){
 
 void Game::addBall(){
     int randomIndex = rand()%m_balls->size();
+    double x = rand()%m_table->getWidth();
+    double y = rand()%m_table->getHeight();
+    QVector2D newpos = QVector2D(x,y);
     if(randomIndex != 0){
         Ball * b = m_balls->at(randomIndex)->copyBall();
+        b->setPosition(newpos);
         m_balls->push_back(b);
     }
 }
@@ -236,25 +273,55 @@ void Game::removeBall(){
     }
 }
 
+void Game::ballMove(){
+    for(Ball* b : *m_balls){
+        double x = rand()%m_table->getWidth();
+        double y = rand()%m_table->getHeight();
+        QVector2D newvel = QVector2D(x,y);
+        b->setVelocity(newvel);
+    }
+}
+
+void Game::addPocket(){
+    m_table->addPocket();
+}
+
 void Game::undo(Game * game){
-    if(m_balls->at(0)->getVelocity().length() < 1 && sinked != true){
-        originator.restoreFromMemento(caretaker.getState(caretaker.getMementoList().size() - 1));
-        m_balls->clear();
-        for(Ball* b: *originator.getBallState()){
-            m_balls->push_back(b->copyBall());
+    if(!m_balls->empty()){
+        if(m_balls->at(0)->getVelocity().length() < 1 && sinked != true){
+            originator.restoreFromMemento(caretaker.getState(caretaker.getMementoList().size() - 1));
+            m_balls->clear();
+            for(Ball* b: *originator.getBallState()){
+                m_balls->push_back(b->copyBall());
+            }
+            Ball* c = m_balls->front();
+            CueBall* cb = new CueBall(c);
+            m_balls->front() = static_cast<Ball*>(cb);
+            m_mouseEventFunctions.clear();
+            game->addMouseFunctions(cb->getEvents());
+            caretaker.getMementoList().clear();
+            originator.set(config_balls);
+            caretaker.add(originator.saveToMemento());
         }
-        Ball* c = m_balls->front();
-        CueBall* cb = new CueBall(c);
-        m_balls->front() = static_cast<Ball*>(cb);
-        m_mouseEventFunctions.clear();
-        game->addMouseFunctions(cb->getEvents());
-        caretaker.getMementoList().clear();
-        originator.set(config_balls);
-        caretaker.add(originator.saveToMemento());
+        else{
+            originator.restoreFromMemento(caretaker.getState(0));
+            m_balls->clear();
+            for(Ball* b: *originator.getBallState()){
+                m_balls->push_back(b->copyBall());
+            }
+            Ball* c = m_balls->front();
+            CueBall* cb = new CueBall(c);
+            m_balls->front() = static_cast<Ball*>(cb);
+            m_mouseEventFunctions.clear();
+            game->addMouseFunctions(cb->getEvents());
+            caretaker.getMementoList().clear();
+            originator.set(config_balls);
+            caretaker.add(originator.saveToMemento());
+            sinked = false;
+        }
     }
     else{
         originator.restoreFromMemento(caretaker.getState(0));
-        m_balls->clear();
         for(Ball* b: *originator.getBallState()){
             m_balls->push_back(b->copyBall());
         }
@@ -267,5 +334,6 @@ void Game::undo(Game * game){
         originator.set(config_balls);
         caretaker.add(originator.saveToMemento());
         sinked = false;
+
     }
 }

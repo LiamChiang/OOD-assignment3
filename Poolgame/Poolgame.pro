@@ -4,7 +4,8 @@
 #
 #-------------------------------------------------
 
-QT       += core gui
+QT       += core gui \
+            multimedia
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
@@ -36,8 +37,7 @@ SOURCES += \
     stagetwobuilder.cpp \
     balldecorator.cpp \
     stagethreebuilder.cpp \
-    stagethreefactory.cpp \
-    pocketdecorator.cpp
+    stagethreefactory.cpp
 
 HEADERS += \
         dialog.h \
@@ -55,11 +55,9 @@ HEADERS += \
     mouseeventable.h \
     stagethreebuilder.h \
     stagethreefactory.h \
-    pocketdecorator.h \
     gamememento.h \
     gameoriginator.h \
-    gamestatecaretaker.h \
-    gamestate.h
+    gamestatecaretaker.h
 
 FORMS += \
         dialog.ui
@@ -72,3 +70,6 @@ json.files = config.json
 json.path = "/Contents/MacOS/"
 
 QMAKE_BUNDLE_DATA += json
+
+RESOURCES += \
+    res.qrc

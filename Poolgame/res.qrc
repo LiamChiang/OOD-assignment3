@@ -1,0 +1,13 @@
+<RCC>
+    <qresource prefix="/sounds">
+        <file>Bomb_Exploding-Sound_Explorer-68256487.wav</file>
+        <file>death-Roman_K-1190383229.mp3</file>
+        <file>002 - Kazumi Totaka - Mii Plaza.mp3</file>
+        <file>40_smith_wesson_single-mike-koenig.wav</file>
+        <file>Dragon Ball Z - Sound Effects - Super Saiyan. (192  kbps).mp3</file>
+        <file>Doh 6.mp3</file>
+    </qresource>
+    <qresource prefix="/images">
+        <file>Jumpscare.png</file>
+    </qresource>
+</RCC>

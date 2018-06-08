@@ -9,6 +9,10 @@ void StageOneTable::render(QPainter &painter, const QVector2D& offset) {
     painter.drawRect(offset.x(), offset.y(), this->getWidth(), this->getHeight());
 }
 
+void StageOneTable::addPocket() {
+    std::cout << "not allowed to add pocket";
+}
+
 void StageTwoTable::render(QPainter &painter, const QVector2D& offset) {
     // our table colour
     painter.setBrush(m_brush);
@@ -19,6 +23,10 @@ void StageTwoTable::render(QPainter &painter, const QVector2D& offset) {
     for (Pocket* p : m_pockets) {
         p->render(painter, offset);
     }
+}
+
+void StageTwoTable::addPocket() {
+    std::cout << "not allowed to add pocket";
 }
 
 StageTwoTable::~StageTwoTable() {
@@ -55,6 +63,14 @@ StageThreeTable::~StageThreeTable() {
     for (Pocket* p : m_pockets) delete p;
 }
 
+void StageThreeTable::addPocket() {
+    double y = rand()%m_height;
+    double x = rand()%m_width;
+    QVector2D newpos = QVector2D(x,y);
+    Pocket* p = new Pocket(15.0, newpos);
+    m_pockets.push_back(p);
+}
+
 bool StageThreeTable::sinks(Ball *b) {
     QVector2D absPos = b->getPosition();
     double radius = b->getRadius();
@@ -67,7 +83,7 @@ bool StageThreeTable::sinks(Ball *b) {
         }
     }
     for(int i = 0; i < m_pockets.size(); ++i){
-        if(m_pockets.at(i)->getNumSunk() == 3){
+        if(m_pockets.at(i)->getNumSunk() == 5){
             delete m_pockets.at(i);
             m_pockets.erase(m_pockets.begin()+i);
         }

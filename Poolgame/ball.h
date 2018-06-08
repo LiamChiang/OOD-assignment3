@@ -59,6 +59,9 @@ public:
     // whether the ball will break, and handle accordingly
     // for base ball, do nothing. insert into rhs if necessary
     virtual bool applyBreak(const QVector2D&, std::vector<Ball*>&) { return false; }
+    /**
+     * @brief copyBall - deep copy the ball (prototype design pattern)
+     */
     virtual Ball* copyBall() = 0;
 };
 
@@ -72,6 +75,9 @@ public:
      * @param painter - QPainter that is owned by the dialog
      */
     void render(QPainter &painter, const QVector2D& offset) override;
+    /**
+     * @brief copyBall - deep copy the stage1 ball (prototype design pattern)
+     */
     virtual Ball* copyBall() override;
 };
 
@@ -92,9 +98,15 @@ public:
      * @param painter - QPainter that is owned by the dialog
      */
     void render(QPainter &painter, const QVector2D& offset) override;
+
+    /**
+     * @brief copyBall - deep copy the composite ball (prototype design pattern)
+     */
     virtual Ball* copyBall() override;
 
-    /* add a child ball to this composite ball */
+    /**
+     * @brief addChild - add a child ball to this composite ball
+     */
     void addChild(Ball* b) { m_children.push_back(b); }
 
     /**

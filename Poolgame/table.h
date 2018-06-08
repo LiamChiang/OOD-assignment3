@@ -33,6 +33,7 @@ public:
 
     virtual bool sinks(Ball*) { return false; }
     virtual std::vector<Pocket*> getPockets() = 0;
+    virtual void addPocket() = 0;
 };
 
 class StageOneTable : public Table
@@ -46,6 +47,7 @@ public:
      */
     void render(QPainter &painter, const QVector2D& offset) override;
     std::vector<Pocket*> getPockets() override {return m_pocketList;}
+    void addPocket() override;
 };
 
 class StageTwoTable : public Table {
@@ -70,6 +72,7 @@ public:
     /* self explanatory */
     void addPocket(Pocket* p) { m_pockets.push_back(p); }
     std::vector<Pocket*> getPockets() override {return m_pocketList;}
+    void addPocket() override;
 };
 
 class StageThreeTable : public Table {
@@ -97,5 +100,6 @@ public:
         m_pocketList = m_pockets;
         return m_pocketList;
     }
+    void addPocket() override;
 };
 

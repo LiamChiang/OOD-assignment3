@@ -12,10 +12,10 @@ MAKEFILE      = Makefile
 
 CC            = /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang
 CXX           = /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang++
-DEFINES       = -DQT_DEPRECATED_WARNINGS -DQT_QML_DEBUG -DQT_WIDGETS_LIB -DQT_GUI_LIB -DQT_CORE_LIB
+DEFINES       = -DQT_DEPRECATED_WARNINGS -DQT_QML_DEBUG -DQT_MULTIMEDIA_LIB -DQT_WIDGETS_LIB -DQT_GUI_LIB -DQT_NETWORK_LIB -DQT_CORE_LIB
 CFLAGS        = -pipe -g $(EXPORT_ARCH_ARGS) -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.12.sdk -mmacosx-version-min=10.10 -Wall -W -fPIC $(DEFINES)
 CXXFLAGS      = -pipe -stdlib=libc++ -g -std=gnu++11 $(EXPORT_ARCH_ARGS) -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.12.sdk -mmacosx-version-min=10.10 -Wall -W -fPIC $(DEFINES)
-INCPATH       = -I../Poolgame -I. -I/Users/liamchiang/Qt5.9.4/5.9.4/clang_64/lib/QtWidgets.framework/Headers -I/Users/liamchiang/Qt5.9.4/5.9.4/clang_64/lib/QtGui.framework/Headers -I/Users/liamchiang/Qt5.9.4/5.9.4/clang_64/lib/QtCore.framework/Headers -I. -I/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.12.sdk/System/Library/Frameworks/OpenGL.framework/Headers -I/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.12.sdk/System/Library/Frameworks/AGL.framework/Headers -I. -I/Users/liamchiang/Qt5.9.4/5.9.4/clang_64/mkspecs/macx-clang -F/Users/liamchiang/Qt5.9.4/5.9.4/clang_64/lib
+INCPATH       = -I../Poolgame -I. -I/Users/liamchiang/Qt5.9.4/5.9.4/clang_64/lib/QtMultimedia.framework/Headers -I/Users/liamchiang/Qt5.9.4/5.9.4/clang_64/lib/QtWidgets.framework/Headers -I/Users/liamchiang/Qt5.9.4/5.9.4/clang_64/lib/QtGui.framework/Headers -I/Users/liamchiang/Qt5.9.4/5.9.4/clang_64/lib/QtNetwork.framework/Headers -I/Users/liamchiang/Qt5.9.4/5.9.4/clang_64/lib/QtCore.framework/Headers -I. -I/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.12.sdk/System/Library/Frameworks/OpenGL.framework/Headers -I/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.12.sdk/System/Library/Frameworks/AGL.framework/Headers -I. -I/Users/liamchiang/Qt5.9.4/5.9.4/clang_64/mkspecs/macx-clang -F/Users/liamchiang/Qt5.9.4/5.9.4/clang_64/lib
 QMAKE         = /Users/liamchiang/Qt5.9.4/5.9.4/clang_64/bin/qmake
 DEL_FILE      = rm -f
 CHK_DIR_EXISTS= test -d
@@ -38,7 +38,7 @@ DISTNAME      = Poolgame1.0.0
 DISTDIR = /Users/liamchiang/UNIVERSITY/COMPUTER\ SCIENCE/YEAR3\ SEMESTER\ 1/INFO3220/Assignment3/INFO3220-A3/build-Poolgame-Desktop_Qt_5_9_4_clang_64bit-Debug/.tmp/Poolgame1.0.0
 LINK          = /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang++
 LFLAGS        = -stdlib=libc++ -headerpad_max_install_names $(EXPORT_ARCH_ARGS) -Wl,-syslibroot,/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.12.sdk -mmacosx-version-min=10.10 -Wl,-rpath,@executable_path/Frameworks -Wl,-rpath,/Users/liamchiang/Qt5.9.4/5.9.4/clang_64/lib
-LIBS          = $(SUBLIBS) -F/Users/liamchiang/Qt5.9.4/5.9.4/clang_64/lib -framework QtWidgets -framework QtGui -framework QtCore -framework DiskArbitration -framework IOKit -framework OpenGL -framework AGL 
+LIBS          = $(SUBLIBS) -F/Users/liamchiang/Qt5.9.4/5.9.4/clang_64/lib -framework QtMultimedia -framework QtNetwork -framework QtCore -framework DiskArbitration -framework IOKit -framework QtGui -framework QtWidgets -framework OpenGL -framework AGL 
 AR            = /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/ar cq
 RANLIB        = /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/ranlib -s
 SED           = sed
@@ -62,8 +62,8 @@ SOURCES       = ../Poolgame/main.cpp \
 		../Poolgame/stagetwobuilder.cpp \
 		../Poolgame/balldecorator.cpp \
 		../Poolgame/stagethreebuilder.cpp \
-		../Poolgame/stagethreefactory.cpp \
-		../Poolgame/pocketdecorator.cpp moc_dialog.cpp
+		../Poolgame/stagethreefactory.cpp qrc_res.cpp \
+		moc_dialog.cpp
 OBJECTS       = main.o \
 		dialog.o \
 		stageonefactory.o \
@@ -77,7 +77,7 @@ OBJECTS       = main.o \
 		balldecorator.o \
 		stagethreebuilder.o \
 		stagethreefactory.o \
-		pocketdecorator.o \
+		qrc_res.o \
 		moc_dialog.o
 DIST          = ../Poolgame/config.json \
 		../Poolgame/config.json \
@@ -281,11 +281,9 @@ DIST          = ../Poolgame/config.json \
 		../Poolgame/mouseeventable.h \
 		../Poolgame/stagethreebuilder.h \
 		../Poolgame/stagethreefactory.h \
-		../Poolgame/pocketdecorator.h \
 		../Poolgame/gamememento.h \
 		../Poolgame/gameoriginator.h \
-		../Poolgame/gamestatecaretaker.h \
-		../Poolgame/gamestate.h ../Poolgame/main.cpp \
+		../Poolgame/gamestatecaretaker.h ../Poolgame/main.cpp \
 		../Poolgame/dialog.cpp \
 		../Poolgame/stageonefactory.cpp \
 		../Poolgame/ball.cpp \
@@ -297,8 +295,7 @@ DIST          = ../Poolgame/config.json \
 		../Poolgame/stagetwobuilder.cpp \
 		../Poolgame/balldecorator.cpp \
 		../Poolgame/stagethreebuilder.cpp \
-		../Poolgame/stagethreefactory.cpp \
-		../Poolgame/pocketdecorator.cpp
+		../Poolgame/stagethreefactory.cpp
 QMAKE_TARGET  = Poolgame
 DESTDIR       = 
 TARGET        = Poolgame.app/Contents/MacOS/Poolgame
@@ -502,8 +499,11 @@ Makefile: ../Poolgame/Poolgame.pro /Users/liamchiang/Qt5.9.4/5.9.4/clang_64/mksp
 		/Users/liamchiang/Qt5.9.4/5.9.4/clang_64/mkspecs/features/yacc.prf \
 		/Users/liamchiang/Qt5.9.4/5.9.4/clang_64/mkspecs/features/lex.prf \
 		../Poolgame/Poolgame.pro \
+		../Poolgame/res.qrc \
+		/Users/liamchiang/Qt5.9.4/5.9.4/clang_64/lib/QtMultimedia.framework/QtMultimedia.prl \
 		/Users/liamchiang/Qt5.9.4/5.9.4/clang_64/lib/QtWidgets.framework/QtWidgets.prl \
 		/Users/liamchiang/Qt5.9.4/5.9.4/clang_64/lib/QtGui.framework/QtGui.prl \
+		/Users/liamchiang/Qt5.9.4/5.9.4/clang_64/lib/QtNetwork.framework/QtNetwork.prl \
 		/Users/liamchiang/Qt5.9.4/5.9.4/clang_64/lib/QtCore.framework/QtCore.prl
 	$(QMAKE) -o Makefile ../Poolgame/Poolgame.pro -spec macx-clang CONFIG+=debug CONFIG+=x86_64 CONFIG+=qml_debug
 /Users/liamchiang/Qt5.9.4/5.9.4/clang_64/mkspecs/features/spec_pre.prf:
@@ -692,8 +692,11 @@ Makefile: ../Poolgame/Poolgame.pro /Users/liamchiang/Qt5.9.4/5.9.4/clang_64/mksp
 /Users/liamchiang/Qt5.9.4/5.9.4/clang_64/mkspecs/features/yacc.prf:
 /Users/liamchiang/Qt5.9.4/5.9.4/clang_64/mkspecs/features/lex.prf:
 ../Poolgame/Poolgame.pro:
+../Poolgame/res.qrc:
+/Users/liamchiang/Qt5.9.4/5.9.4/clang_64/lib/QtMultimedia.framework/QtMultimedia.prl:
 /Users/liamchiang/Qt5.9.4/5.9.4/clang_64/lib/QtWidgets.framework/QtWidgets.prl:
 /Users/liamchiang/Qt5.9.4/5.9.4/clang_64/lib/QtGui.framework/QtGui.prl:
+/Users/liamchiang/Qt5.9.4/5.9.4/clang_64/lib/QtNetwork.framework/QtNetwork.prl:
 /Users/liamchiang/Qt5.9.4/5.9.4/clang_64/lib/QtCore.framework/QtCore.prl:
 qmake: FORCE
 	@$(QMAKE) -o Makefile ../Poolgame/Poolgame.pro -spec macx-clang CONFIG+=debug CONFIG+=x86_64 CONFIG+=qml_debug
@@ -729,9 +732,10 @@ dist: distdir FORCE
 distdir: FORCE
 	@test -d $(DISTDIR) || mkdir -p $(DISTDIR)
 	$(COPY_FILE) --parents $(DIST) $(DISTDIR)/
+	$(COPY_FILE) --parents ../Poolgame/res.qrc $(DISTDIR)/
 	$(COPY_FILE) --parents /Users/liamchiang/Qt5.9.4/5.9.4/clang_64/mkspecs/features/data/dummy.cpp $(DISTDIR)/
-	$(COPY_FILE) --parents ../Poolgame/dialog.h ../Poolgame/abstractstagefactory.h ../Poolgame/stageonefactory.h ../Poolgame/ball.h ../Poolgame/table.h ../Poolgame/game.h ../Poolgame/gamebuilder.h ../Poolgame/utils.h ../Poolgame/stagetwofactory.h ../Poolgame/pocket.h ../Poolgame/stagetwobuilder.h ../Poolgame/balldecorator.h ../Poolgame/mouseeventable.h ../Poolgame/stagethreebuilder.h ../Poolgame/stagethreefactory.h ../Poolgame/pocketdecorator.h ../Poolgame/gamememento.h ../Poolgame/gameoriginator.h ../Poolgame/gamestatecaretaker.h ../Poolgame/gamestate.h $(DISTDIR)/
-	$(COPY_FILE) --parents ../Poolgame/main.cpp ../Poolgame/dialog.cpp ../Poolgame/stageonefactory.cpp ../Poolgame/ball.cpp ../Poolgame/table.cpp ../Poolgame/game.cpp ../Poolgame/gamebuilder.cpp ../Poolgame/stagetwofactory.cpp ../Poolgame/pocket.cpp ../Poolgame/stagetwobuilder.cpp ../Poolgame/balldecorator.cpp ../Poolgame/stagethreebuilder.cpp ../Poolgame/stagethreefactory.cpp ../Poolgame/pocketdecorator.cpp $(DISTDIR)/
+	$(COPY_FILE) --parents ../Poolgame/dialog.h ../Poolgame/abstractstagefactory.h ../Poolgame/stageonefactory.h ../Poolgame/ball.h ../Poolgame/table.h ../Poolgame/game.h ../Poolgame/gamebuilder.h ../Poolgame/utils.h ../Poolgame/stagetwofactory.h ../Poolgame/pocket.h ../Poolgame/stagetwobuilder.h ../Poolgame/balldecorator.h ../Poolgame/mouseeventable.h ../Poolgame/stagethreebuilder.h ../Poolgame/stagethreefactory.h ../Poolgame/gamememento.h ../Poolgame/gameoriginator.h ../Poolgame/gamestatecaretaker.h $(DISTDIR)/
+	$(COPY_FILE) --parents ../Poolgame/main.cpp ../Poolgame/dialog.cpp ../Poolgame/stageonefactory.cpp ../Poolgame/ball.cpp ../Poolgame/table.cpp ../Poolgame/game.cpp ../Poolgame/gamebuilder.cpp ../Poolgame/stagetwofactory.cpp ../Poolgame/pocket.cpp ../Poolgame/stagetwobuilder.cpp ../Poolgame/balldecorator.cpp ../Poolgame/stagethreebuilder.cpp ../Poolgame/stagethreefactory.cpp $(DISTDIR)/
 	$(COPY_FILE) --parents ../Poolgame/dialog.ui $(DISTDIR)/
 
 
@@ -755,8 +759,17 @@ check: first
 
 benchmark: first
 
-compiler_rcc_make_all:
+compiler_rcc_make_all: qrc_res.cpp
 compiler_rcc_clean:
+	-$(DEL_FILE) qrc_res.cpp
+qrc_res.cpp: ../Poolgame/res.qrc \
+		/Users/liamchiang/Qt5.9.4/5.9.4/clang_64/bin/rcc \
+		../Poolgame/Jumpscare.png \
+		../Poolgame/Bomb_Exploding-Sound_Explorer-68256487.wav \
+		../Poolgame/40_smith_wesson_single-mike-koenig.wav \
+		../Poolgame/death-Roman_K-1190383229.mp3
+	/Users/liamchiang/Qt5.9.4/5.9.4/clang_64/bin/rcc -name res ../Poolgame/res.qrc -o qrc_res.cpp
+
 compiler_moc_predefs_make_all: moc_predefs.h
 compiler_moc_predefs_clean:
 	-$(DEL_FILE) moc_predefs.h
@@ -768,6 +781,10 @@ compiler_moc_header_clean:
 	-$(DEL_FILE) moc_dialog.cpp
 moc_dialog.cpp: /Users/liamchiang/Qt5.9.4/5.9.4/clang_64/lib/QtWidgets.framework/Headers/QDialog \
 		/Users/liamchiang/Qt5.9.4/5.9.4/clang_64/lib/QtWidgets.framework/Headers/qdialog.h \
+		/Users/liamchiang/Qt5.9.4/5.9.4/clang_64/lib/QtMultimedia.framework/Headers/QMediaPlayer \
+		/Users/liamchiang/Qt5.9.4/5.9.4/clang_64/lib/QtMultimedia.framework/Headers/qmediaplayer.h \
+		/Users/liamchiang/Qt5.9.4/5.9.4/clang_64/lib/QtMultimedia.framework/Headers/QMediaPlaylist \
+		/Users/liamchiang/Qt5.9.4/5.9.4/clang_64/lib/QtMultimedia.framework/Headers/qmediaplaylist.h \
 		../Poolgame/ball.h \
 		/Users/liamchiang/Qt5.9.4/5.9.4/clang_64/lib/QtCore.framework/Headers/QDebug \
 		/Users/liamchiang/Qt5.9.4/5.9.4/clang_64/lib/QtCore.framework/Headers/qdebug.h \
@@ -782,6 +799,12 @@ moc_dialog.cpp: /Users/liamchiang/Qt5.9.4/5.9.4/clang_64/lib/QtWidgets.framework
 		/Users/liamchiang/Qt5.9.4/5.9.4/clang_64/lib/QtCore.framework/Headers/qjsonobject.h \
 		/Users/liamchiang/Qt5.9.4/5.9.4/clang_64/lib/QtGui.framework/Headers/QMouseEvent \
 		/Users/liamchiang/Qt5.9.4/5.9.4/clang_64/lib/QtGui.framework/Headers/qevent.h \
+		/Users/liamchiang/Qt5.9.4/5.9.4/clang_64/lib/QtWidgets.framework/Headers/QGraphicsScene \
+		/Users/liamchiang/Qt5.9.4/5.9.4/clang_64/lib/QtWidgets.framework/Headers/qgraphicsscene.h \
+		/Users/liamchiang/Qt5.9.4/5.9.4/clang_64/lib/QtWidgets.framework/Headers/QGraphicsView \
+		/Users/liamchiang/Qt5.9.4/5.9.4/clang_64/lib/QtWidgets.framework/Headers/qgraphicsview.h \
+		/Users/liamchiang/Qt5.9.4/5.9.4/clang_64/lib/QtWidgets.framework/Headers/QGraphicsPixmapItem \
+		/Users/liamchiang/Qt5.9.4/5.9.4/clang_64/lib/QtWidgets.framework/Headers/qgraphicsitem.h \
 		../Poolgame/abstractstagefactory.h \
 		../Poolgame/table.h \
 		/Users/liamchiang/Qt5.9.4/5.9.4/clang_64/lib/QtGui.framework/Headers/QColor \
@@ -798,7 +821,7 @@ moc_dialog.cpp: /Users/liamchiang/Qt5.9.4/5.9.4/clang_64/lib/QtWidgets.framework
 		../Poolgame/dialog.h \
 		moc_predefs.h \
 		/Users/liamchiang/Qt5.9.4/5.9.4/clang_64/bin/moc
-	/Users/liamchiang/Qt5.9.4/5.9.4/clang_64/bin/moc $(DEFINES) --include ./moc_predefs.h -I/Users/liamchiang/Qt5.9.4/5.9.4/clang_64/mkspecs/macx-clang -I'/Users/liamchiang/UNIVERSITY/COMPUTER SCIENCE/YEAR3 SEMESTER 1/INFO3220/Assignment3/INFO3220-A3/Poolgame' -I/Users/liamchiang/Qt5.9.4/5.9.4/clang_64/lib/QtWidgets.framework/Headers -I/Users/liamchiang/Qt5.9.4/5.9.4/clang_64/lib/QtGui.framework/Headers -I/Users/liamchiang/Qt5.9.4/5.9.4/clang_64/lib/QtCore.framework/Headers -I. -I/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include/c++/v1 -I/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/clang/8.0.0/include -I/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include -I/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.12.sdk/usr/include -F/Users/liamchiang/Qt5.9.4/5.9.4/clang_64/lib ../Poolgame/dialog.h -o moc_dialog.cpp
+	/Users/liamchiang/Qt5.9.4/5.9.4/clang_64/bin/moc $(DEFINES) --include ./moc_predefs.h -I/Users/liamchiang/Qt5.9.4/5.9.4/clang_64/mkspecs/macx-clang -I'/Users/liamchiang/UNIVERSITY/COMPUTER SCIENCE/YEAR3 SEMESTER 1/INFO3220/Assignment3/INFO3220-A3/Poolgame' -I/Users/liamchiang/Qt5.9.4/5.9.4/clang_64/lib/QtMultimedia.framework/Headers -I/Users/liamchiang/Qt5.9.4/5.9.4/clang_64/lib/QtWidgets.framework/Headers -I/Users/liamchiang/Qt5.9.4/5.9.4/clang_64/lib/QtGui.framework/Headers -I/Users/liamchiang/Qt5.9.4/5.9.4/clang_64/lib/QtNetwork.framework/Headers -I/Users/liamchiang/Qt5.9.4/5.9.4/clang_64/lib/QtCore.framework/Headers -I. -I/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include/c++/v1 -I/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/clang/8.0.0/include -I/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include -I/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.12.sdk/usr/include -F/Users/liamchiang/Qt5.9.4/5.9.4/clang_64/lib ../Poolgame/dialog.h -o moc_dialog.cpp
 
 compiler_moc_source_make_all:
 compiler_moc_source_clean:
@@ -817,13 +840,17 @@ compiler_yacc_impl_make_all:
 compiler_yacc_impl_clean:
 compiler_lex_make_all:
 compiler_lex_clean:
-compiler_clean: compiler_moc_predefs_clean compiler_moc_header_clean compiler_uic_clean 
+compiler_clean: compiler_rcc_clean compiler_moc_predefs_clean compiler_moc_header_clean compiler_uic_clean 
 
 ####### Compile
 
 main.o: ../Poolgame/main.cpp ../Poolgame/dialog.h \
 		/Users/liamchiang/Qt5.9.4/5.9.4/clang_64/lib/QtWidgets.framework/Headers/QDialog \
 		/Users/liamchiang/Qt5.9.4/5.9.4/clang_64/lib/QtWidgets.framework/Headers/qdialog.h \
+		/Users/liamchiang/Qt5.9.4/5.9.4/clang_64/lib/QtMultimedia.framework/Headers/QMediaPlayer \
+		/Users/liamchiang/Qt5.9.4/5.9.4/clang_64/lib/QtMultimedia.framework/Headers/qmediaplayer.h \
+		/Users/liamchiang/Qt5.9.4/5.9.4/clang_64/lib/QtMultimedia.framework/Headers/QMediaPlaylist \
+		/Users/liamchiang/Qt5.9.4/5.9.4/clang_64/lib/QtMultimedia.framework/Headers/qmediaplaylist.h \
 		../Poolgame/ball.h \
 		/Users/liamchiang/Qt5.9.4/5.9.4/clang_64/lib/QtCore.framework/Headers/QDebug \
 		/Users/liamchiang/Qt5.9.4/5.9.4/clang_64/lib/QtCore.framework/Headers/qdebug.h \
@@ -838,6 +865,12 @@ main.o: ../Poolgame/main.cpp ../Poolgame/dialog.h \
 		/Users/liamchiang/Qt5.9.4/5.9.4/clang_64/lib/QtCore.framework/Headers/qjsonobject.h \
 		/Users/liamchiang/Qt5.9.4/5.9.4/clang_64/lib/QtGui.framework/Headers/QMouseEvent \
 		/Users/liamchiang/Qt5.9.4/5.9.4/clang_64/lib/QtGui.framework/Headers/qevent.h \
+		/Users/liamchiang/Qt5.9.4/5.9.4/clang_64/lib/QtWidgets.framework/Headers/QGraphicsScene \
+		/Users/liamchiang/Qt5.9.4/5.9.4/clang_64/lib/QtWidgets.framework/Headers/qgraphicsscene.h \
+		/Users/liamchiang/Qt5.9.4/5.9.4/clang_64/lib/QtWidgets.framework/Headers/QGraphicsView \
+		/Users/liamchiang/Qt5.9.4/5.9.4/clang_64/lib/QtWidgets.framework/Headers/qgraphicsview.h \
+		/Users/liamchiang/Qt5.9.4/5.9.4/clang_64/lib/QtWidgets.framework/Headers/QGraphicsPixmapItem \
+		/Users/liamchiang/Qt5.9.4/5.9.4/clang_64/lib/QtWidgets.framework/Headers/qgraphicsitem.h \
 		../Poolgame/abstractstagefactory.h \
 		../Poolgame/table.h \
 		/Users/liamchiang/Qt5.9.4/5.9.4/clang_64/lib/QtGui.framework/Headers/QColor \
@@ -870,6 +903,10 @@ main.o: ../Poolgame/main.cpp ../Poolgame/dialog.h \
 dialog.o: ../Poolgame/dialog.cpp ../Poolgame/dialog.h \
 		/Users/liamchiang/Qt5.9.4/5.9.4/clang_64/lib/QtWidgets.framework/Headers/QDialog \
 		/Users/liamchiang/Qt5.9.4/5.9.4/clang_64/lib/QtWidgets.framework/Headers/qdialog.h \
+		/Users/liamchiang/Qt5.9.4/5.9.4/clang_64/lib/QtMultimedia.framework/Headers/QMediaPlayer \
+		/Users/liamchiang/Qt5.9.4/5.9.4/clang_64/lib/QtMultimedia.framework/Headers/qmediaplayer.h \
+		/Users/liamchiang/Qt5.9.4/5.9.4/clang_64/lib/QtMultimedia.framework/Headers/QMediaPlaylist \
+		/Users/liamchiang/Qt5.9.4/5.9.4/clang_64/lib/QtMultimedia.framework/Headers/qmediaplaylist.h \
 		../Poolgame/ball.h \
 		/Users/liamchiang/Qt5.9.4/5.9.4/clang_64/lib/QtCore.framework/Headers/QDebug \
 		/Users/liamchiang/Qt5.9.4/5.9.4/clang_64/lib/QtCore.framework/Headers/qdebug.h \
@@ -884,6 +921,12 @@ dialog.o: ../Poolgame/dialog.cpp ../Poolgame/dialog.h \
 		/Users/liamchiang/Qt5.9.4/5.9.4/clang_64/lib/QtCore.framework/Headers/qjsonobject.h \
 		/Users/liamchiang/Qt5.9.4/5.9.4/clang_64/lib/QtGui.framework/Headers/QMouseEvent \
 		/Users/liamchiang/Qt5.9.4/5.9.4/clang_64/lib/QtGui.framework/Headers/qevent.h \
+		/Users/liamchiang/Qt5.9.4/5.9.4/clang_64/lib/QtWidgets.framework/Headers/QGraphicsScene \
+		/Users/liamchiang/Qt5.9.4/5.9.4/clang_64/lib/QtWidgets.framework/Headers/qgraphicsscene.h \
+		/Users/liamchiang/Qt5.9.4/5.9.4/clang_64/lib/QtWidgets.framework/Headers/QGraphicsView \
+		/Users/liamchiang/Qt5.9.4/5.9.4/clang_64/lib/QtWidgets.framework/Headers/qgraphicsview.h \
+		/Users/liamchiang/Qt5.9.4/5.9.4/clang_64/lib/QtWidgets.framework/Headers/QGraphicsPixmapItem \
+		/Users/liamchiang/Qt5.9.4/5.9.4/clang_64/lib/QtWidgets.framework/Headers/qgraphicsitem.h \
 		../Poolgame/abstractstagefactory.h \
 		../Poolgame/table.h \
 		/Users/liamchiang/Qt5.9.4/5.9.4/clang_64/lib/QtGui.framework/Headers/QColor \
@@ -937,6 +980,8 @@ ball.o: ../Poolgame/ball.cpp ../Poolgame/ball.h \
 table.o: ../Poolgame/table.cpp ../Poolgame/table.h \
 		/Users/liamchiang/Qt5.9.4/5.9.4/clang_64/lib/QtGui.framework/Headers/QColor \
 		/Users/liamchiang/Qt5.9.4/5.9.4/clang_64/lib/QtGui.framework/Headers/qcolor.h \
+		/Users/liamchiang/Qt5.9.4/5.9.4/clang_64/lib/QtCore.framework/Headers/QDebug \
+		/Users/liamchiang/Qt5.9.4/5.9.4/clang_64/lib/QtCore.framework/Headers/qdebug.h \
 		/Users/liamchiang/Qt5.9.4/5.9.4/clang_64/lib/QtGui.framework/Headers/QPainter \
 		/Users/liamchiang/Qt5.9.4/5.9.4/clang_64/lib/QtGui.framework/Headers/qpainter.h \
 		../Poolgame/pocket.h \
@@ -944,8 +989,6 @@ table.o: ../Poolgame/table.cpp ../Poolgame/table.h \
 		/Users/liamchiang/Qt5.9.4/5.9.4/clang_64/lib/QtGui.framework/Headers/qvector2d.h \
 		/Users/liamchiang/Qt5.9.4/5.9.4/clang_64/lib/QtGui.framework/Headers/QBrush \
 		/Users/liamchiang/Qt5.9.4/5.9.4/clang_64/lib/QtGui.framework/Headers/qbrush.h \
-		/Users/liamchiang/Qt5.9.4/5.9.4/clang_64/lib/QtCore.framework/Headers/QDebug \
-		/Users/liamchiang/Qt5.9.4/5.9.4/clang_64/lib/QtCore.framework/Headers/qdebug.h \
 		../Poolgame/ball.h \
 		/Users/liamchiang/Qt5.9.4/5.9.4/clang_64/lib/QtCore.framework/Headers/QPoint \
 		/Users/liamchiang/Qt5.9.4/5.9.4/clang_64/lib/QtCore.framework/Headers/qpoint.h
@@ -958,6 +1001,14 @@ game.o: ../Poolgame/game.cpp ../Poolgame/game.h \
 		/Users/liamchiang/Qt5.9.4/5.9.4/clang_64/lib/QtCore.framework/Headers/qjsonobject.h \
 		/Users/liamchiang/Qt5.9.4/5.9.4/clang_64/lib/QtGui.framework/Headers/QMouseEvent \
 		/Users/liamchiang/Qt5.9.4/5.9.4/clang_64/lib/QtGui.framework/Headers/qevent.h \
+		/Users/liamchiang/Qt5.9.4/5.9.4/clang_64/lib/QtMultimedia.framework/Headers/QMediaPlayer \
+		/Users/liamchiang/Qt5.9.4/5.9.4/clang_64/lib/QtMultimedia.framework/Headers/qmediaplayer.h \
+		/Users/liamchiang/Qt5.9.4/5.9.4/clang_64/lib/QtWidgets.framework/Headers/QGraphicsScene \
+		/Users/liamchiang/Qt5.9.4/5.9.4/clang_64/lib/QtWidgets.framework/Headers/qgraphicsscene.h \
+		/Users/liamchiang/Qt5.9.4/5.9.4/clang_64/lib/QtWidgets.framework/Headers/QGraphicsView \
+		/Users/liamchiang/Qt5.9.4/5.9.4/clang_64/lib/QtWidgets.framework/Headers/qgraphicsview.h \
+		/Users/liamchiang/Qt5.9.4/5.9.4/clang_64/lib/QtWidgets.framework/Headers/QGraphicsPixmapItem \
+		/Users/liamchiang/Qt5.9.4/5.9.4/clang_64/lib/QtWidgets.framework/Headers/qgraphicsitem.h \
 		../Poolgame/abstractstagefactory.h \
 		../Poolgame/ball.h \
 		/Users/liamchiang/Qt5.9.4/5.9.4/clang_64/lib/QtCore.framework/Headers/QPoint \
@@ -1007,6 +1058,14 @@ gamebuilder.o: ../Poolgame/gamebuilder.cpp ../Poolgame/gamebuilder.h \
 		../Poolgame/game.h \
 		/Users/liamchiang/Qt5.9.4/5.9.4/clang_64/lib/QtGui.framework/Headers/QMouseEvent \
 		/Users/liamchiang/Qt5.9.4/5.9.4/clang_64/lib/QtGui.framework/Headers/qevent.h \
+		/Users/liamchiang/Qt5.9.4/5.9.4/clang_64/lib/QtMultimedia.framework/Headers/QMediaPlayer \
+		/Users/liamchiang/Qt5.9.4/5.9.4/clang_64/lib/QtMultimedia.framework/Headers/qmediaplayer.h \
+		/Users/liamchiang/Qt5.9.4/5.9.4/clang_64/lib/QtWidgets.framework/Headers/QGraphicsScene \
+		/Users/liamchiang/Qt5.9.4/5.9.4/clang_64/lib/QtWidgets.framework/Headers/qgraphicsscene.h \
+		/Users/liamchiang/Qt5.9.4/5.9.4/clang_64/lib/QtWidgets.framework/Headers/QGraphicsView \
+		/Users/liamchiang/Qt5.9.4/5.9.4/clang_64/lib/QtWidgets.framework/Headers/qgraphicsview.h \
+		/Users/liamchiang/Qt5.9.4/5.9.4/clang_64/lib/QtWidgets.framework/Headers/QGraphicsPixmapItem \
+		/Users/liamchiang/Qt5.9.4/5.9.4/clang_64/lib/QtWidgets.framework/Headers/qgraphicsitem.h \
 		../Poolgame/gameoriginator.h \
 		../Poolgame/gamememento.h \
 		../Poolgame/gamestatecaretaker.h \
@@ -1075,6 +1134,14 @@ stagetwobuilder.o: ../Poolgame/stagetwobuilder.cpp ../Poolgame/stagetwobuilder.h
 		../Poolgame/game.h \
 		/Users/liamchiang/Qt5.9.4/5.9.4/clang_64/lib/QtGui.framework/Headers/QMouseEvent \
 		/Users/liamchiang/Qt5.9.4/5.9.4/clang_64/lib/QtGui.framework/Headers/qevent.h \
+		/Users/liamchiang/Qt5.9.4/5.9.4/clang_64/lib/QtMultimedia.framework/Headers/QMediaPlayer \
+		/Users/liamchiang/Qt5.9.4/5.9.4/clang_64/lib/QtMultimedia.framework/Headers/qmediaplayer.h \
+		/Users/liamchiang/Qt5.9.4/5.9.4/clang_64/lib/QtWidgets.framework/Headers/QGraphicsScene \
+		/Users/liamchiang/Qt5.9.4/5.9.4/clang_64/lib/QtWidgets.framework/Headers/qgraphicsscene.h \
+		/Users/liamchiang/Qt5.9.4/5.9.4/clang_64/lib/QtWidgets.framework/Headers/QGraphicsView \
+		/Users/liamchiang/Qt5.9.4/5.9.4/clang_64/lib/QtWidgets.framework/Headers/qgraphicsview.h \
+		/Users/liamchiang/Qt5.9.4/5.9.4/clang_64/lib/QtWidgets.framework/Headers/QGraphicsPixmapItem \
+		/Users/liamchiang/Qt5.9.4/5.9.4/clang_64/lib/QtWidgets.framework/Headers/qgraphicsitem.h \
 		../Poolgame/gameoriginator.h \
 		../Poolgame/gamememento.h \
 		../Poolgame/gamestatecaretaker.h \
@@ -1127,6 +1194,14 @@ stagethreebuilder.o: ../Poolgame/stagethreebuilder.cpp ../Poolgame/stagethreebui
 		../Poolgame/game.h \
 		/Users/liamchiang/Qt5.9.4/5.9.4/clang_64/lib/QtGui.framework/Headers/QMouseEvent \
 		/Users/liamchiang/Qt5.9.4/5.9.4/clang_64/lib/QtGui.framework/Headers/qevent.h \
+		/Users/liamchiang/Qt5.9.4/5.9.4/clang_64/lib/QtMultimedia.framework/Headers/QMediaPlayer \
+		/Users/liamchiang/Qt5.9.4/5.9.4/clang_64/lib/QtMultimedia.framework/Headers/qmediaplayer.h \
+		/Users/liamchiang/Qt5.9.4/5.9.4/clang_64/lib/QtWidgets.framework/Headers/QGraphicsScene \
+		/Users/liamchiang/Qt5.9.4/5.9.4/clang_64/lib/QtWidgets.framework/Headers/qgraphicsscene.h \
+		/Users/liamchiang/Qt5.9.4/5.9.4/clang_64/lib/QtWidgets.framework/Headers/QGraphicsView \
+		/Users/liamchiang/Qt5.9.4/5.9.4/clang_64/lib/QtWidgets.framework/Headers/qgraphicsview.h \
+		/Users/liamchiang/Qt5.9.4/5.9.4/clang_64/lib/QtWidgets.framework/Headers/QGraphicsPixmapItem \
+		/Users/liamchiang/Qt5.9.4/5.9.4/clang_64/lib/QtWidgets.framework/Headers/qgraphicsitem.h \
 		../Poolgame/gameoriginator.h \
 		../Poolgame/gamememento.h \
 		../Poolgame/gamestatecaretaker.h \
@@ -1134,8 +1209,7 @@ stagethreebuilder.o: ../Poolgame/stagethreebuilder.cpp ../Poolgame/stagethreebui
 		../Poolgame/utils.h \
 		../Poolgame/mouseeventable.h \
 		/Users/liamchiang/Qt5.9.4/5.9.4/clang_64/lib/QtCore.framework/Headers/QJsonArray \
-		/Users/liamchiang/Qt5.9.4/5.9.4/clang_64/lib/QtCore.framework/Headers/qjsonarray.h \
-		../Poolgame/pocketdecorator.h
+		/Users/liamchiang/Qt5.9.4/5.9.4/clang_64/lib/QtCore.framework/Headers/qjsonarray.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o stagethreebuilder.o ../Poolgame/stagethreebuilder.cpp
 
 stagethreefactory.o: ../Poolgame/stagethreefactory.cpp ../Poolgame/stagethreefactory.h \
@@ -1159,21 +1233,8 @@ stagethreefactory.o: ../Poolgame/stagethreefactory.cpp ../Poolgame/stagethreefac
 		/Users/liamchiang/Qt5.9.4/5.9.4/clang_64/lib/QtCore.framework/Headers/qjsonobject.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o stagethreefactory.o ../Poolgame/stagethreefactory.cpp
 
-pocketdecorator.o: ../Poolgame/pocketdecorator.cpp ../Poolgame/pocketdecorator.h \
-		../Poolgame/pocket.h \
-		/Users/liamchiang/Qt5.9.4/5.9.4/clang_64/lib/QtGui.framework/Headers/QVector2D \
-		/Users/liamchiang/Qt5.9.4/5.9.4/clang_64/lib/QtGui.framework/Headers/qvector2d.h \
-		/Users/liamchiang/Qt5.9.4/5.9.4/clang_64/lib/QtGui.framework/Headers/QPainter \
-		/Users/liamchiang/Qt5.9.4/5.9.4/clang_64/lib/QtGui.framework/Headers/qpainter.h \
-		/Users/liamchiang/Qt5.9.4/5.9.4/clang_64/lib/QtGui.framework/Headers/QBrush \
-		/Users/liamchiang/Qt5.9.4/5.9.4/clang_64/lib/QtGui.framework/Headers/qbrush.h \
-		/Users/liamchiang/Qt5.9.4/5.9.4/clang_64/lib/QtCore.framework/Headers/QDebug \
-		/Users/liamchiang/Qt5.9.4/5.9.4/clang_64/lib/QtCore.framework/Headers/qdebug.h \
-		../Poolgame/utils.h \
-		/Users/liamchiang/Qt5.9.4/5.9.4/clang_64/lib/QtGui.framework/Headers/QMouseEvent \
-		/Users/liamchiang/Qt5.9.4/5.9.4/clang_64/lib/QtGui.framework/Headers/qevent.h \
-		../Poolgame/mouseeventable.h
-	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o pocketdecorator.o ../Poolgame/pocketdecorator.cpp
+qrc_res.o: qrc_res.cpp 
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o qrc_res.o qrc_res.cpp
 
 moc_dialog.o: moc_dialog.cpp 
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o moc_dialog.o moc_dialog.cpp

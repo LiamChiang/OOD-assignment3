@@ -32,7 +32,8 @@ public:
 
     /** add whether this pocket has sunk a ball */
     void incrementSunk() { ++m_sunk; }
-    Pocket* copyPocket(){return new Pocket(m_radius, m_pos);}
+
+    //stage3
     size_t getNumSunk(){return m_sunk;}
     QVector2D getPosition(){return m_pos;}
     double getRadius(){return m_radius;}

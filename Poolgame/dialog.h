@@ -1,5 +1,7 @@
 #pragma once
 #include <QDialog>
+#include <QMediaPlayer>
+#include <QMediaPlaylist>
 #include "ball.h"
 #include "game.h"
 
@@ -65,5 +67,12 @@ private:
      * @brief m_game - our game object to be played
      */
     Game* m_game = nullptr;
+
+    QMediaPlaylist *background;
+    QMediaPlayer* music;
+    QMediaPlayer* ballshot;
+    QMediaPlayer* powerup;
+    QMediaPlayer* doh;
+    QMediaPlayer* bomb;
 };
 

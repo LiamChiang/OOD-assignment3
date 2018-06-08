@@ -3,6 +3,10 @@
 #include <QJsonObject>
 #include <functional>
 #include <QMouseEvent>
+#include <QMediaPlayer>
+#include <QGraphicsScene>
+#include <QGraphicsView>
+#include <QGraphicsPixmapItem>
 #include <algorithm>
 
 #include "abstractstagefactory.h"
@@ -47,14 +51,15 @@ public:
     Game(std::vector<Ball*>* balls, Table* table) :
         m_balls(balls), m_table(table) {
 
+        // deep copy the ball state for storing the ball state into memento list
         config_balls = new std::vector<Ball*>();
         for(Ball* b: *m_balls){
             Ball* clone =  b->copyBall();
             config_balls->push_back(clone);
         }
+        // set up the ball state through the originator and save the satate into memento list by the caretaker
         originator.set(config_balls);
         caretaker.add(originator.saveToMemento());
-
     }
     /**
      * @brief Draws all owned objects to the screen (balls and table)
@@ -112,16 +117,70 @@ public:
      * @return event queue of event functions
      */
     MouseEventable::EventQueue& getEventFns() { return m_mouseEventFunctions; }
-    void addBall();
-    void removeBall();
-    void undo(Game* game);
-    std::vector<Ball*>* getBalls(){ return m_balls; }
-    std::vector<Pocket*>* getPockets(){return m_pockets;}
-    void saveGameDate(std::vector<Ball*>* ballstates);
-    void triggerStage3(){stage3Trigger = true;}
-    void triggerPocket(){stage3Pocket = true;}
-    void stopPocket(){stage3Pocket = false;}
-    bool isStage3(){return stage3Trigger;}
-    bool isPocketTriggered(){return stage3Pocket;}
 
+    /**
+     * @brief addBall - dynamically add random balls once receive the command Q
+     * @return void
+     */
+    void addBall();
+    /**
+     * @brief removeBall - dynamically remove random balls once receive the command W
+     * @return void
+     */
+    void removeBall();
+    /**
+     * @brief undo - undo the ball state to previous one or to the initialised one once receive the command R
+     * @return void
+     */
+    void undo(Game* game);
+    /**
+     * @brief ballMove - dynamically make all balls move once receive the command A
+     * @return void
+     */
+    void ballMove();
+    /**
+     * @brief addPocket - dynamically add random pockets once receive the command S
+     * @return void
+     */
+    void addPocket();
+    /**
+     * @brief getBalls - get current ball information in the game
+     * @return std::vector<Ball*>
+     */
+    std::vector<Ball*>* getBalls(){ return m_balls; }
+    /**
+     * @brief getPockets - get current pockets information in the game
+     * @return std::vector<Pocket*>
+     */
+    std::vector<Pocket*>* getPockets(){return m_pockets;}
+    /**
+     * @brief saveGameDate - save the ball state into the memento list by the originator and caretake.
+     * @return void
+     */
+    void saveGameDate(std::vector<Ball*>* ballstates);
+    /**
+     * @brief triggerStage3 - trigger stage3 extensions once its stage3 game
+     * @return void
+     */
+    void triggerStage3(){stage3Trigger = true;}
+    /**
+     * @brief triggerPocket - trigger pocket moving extensions once receive its stage 3 game and receive the command E
+     * @return void
+     */
+    void triggerPocket(){stage3Pocket = true;}
+    /**
+     * @brief stopPocket - stop moving pockets once receive its stage 3 game and receive the command E again
+     * @return void
+     */
+    void stopPocket(){stage3Pocket = false;}
+    /**
+     * @brief isStage3 - check whether its stage 3 game or not
+     * @return bool
+     */
+    bool isStage3(){return stage3Trigger;}
+    /**
+     * @brief isPocketTriggered - check whether the pocket moving extension is triggered or not.
+     * @return bool
+     */
+    bool isPocketTriggered(){return stage3Pocket;}
 };
